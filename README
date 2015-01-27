@@ -1,0 +1,10 @@
+# Transfer
+==========
+
+A file transfer application used for transferring stuff between computers on the same LAN.
+
+After being tired of having a slow network, and skype wasn't up to the task, I decided to start this mini project
+in order to have a fast way of transferring data between pcs without the need of an account/email. Just some
+basic setup is needed in order to identify the user on the LAN.
+
+
