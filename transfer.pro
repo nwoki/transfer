@@ -16,11 +16,16 @@ OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
 HEADERS  += \
-    src/mainwindow.h
+    src/mainwindow.h \
+    src/systray.h
 
 SOURCES += \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/systray.cpp
 
 FORMS += \
     forms/mainwindow.ui
+
+RESOURCES += \
+    images.qrc

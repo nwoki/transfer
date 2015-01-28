@@ -3,6 +3,9 @@
 
 #include <QtWidgets/QMainWindow>
 
+
+class Systray;
+
 namespace Ui {
     class MainWindow;
 }
@@ -17,6 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Systray *m_systray;
 };
 
 #endif // MAINWINDOW_H
