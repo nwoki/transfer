@@ -6,6 +6,8 @@
 
 QT += core gui
 
+CONFIG += c++11
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = transfer
@@ -16,16 +18,16 @@ OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
 HEADERS  += \
-    src/mainwindow.h \
+    src/core.h \
     src/systray.h
 
 SOURCES += \
     src/main.cpp \
-    src/mainwindow.cpp \
+    src/core.cpp \
     src/systray.cpp
 
-FORMS += \
-    forms/mainwindow.ui
+# FORMS += \
+#     forms/mainwindow.ui
 
 RESOURCES += \
     images.qrc

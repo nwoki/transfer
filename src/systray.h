@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QSystemTrayIcon>
 
+
 class Systray : public QSystemTrayIcon
 {
     Q_OBJECT
@@ -12,6 +13,8 @@ public:
     ~Systray();
 
 private:
+    void prepareMenu();
+
     class Private;
     Private const * d;
 };
