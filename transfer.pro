@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui network
 
 CONFIG += c++11
 
@@ -19,11 +19,13 @@ MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
+    src/settings.h \
     src/systray.h
 
 SOURCES += \
     src/main.cpp \
     src/core.cpp \
+    src/settings.cpp \
     src/systray.cpp
 
 # FORMS += \
