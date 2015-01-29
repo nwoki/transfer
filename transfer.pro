@@ -19,17 +19,19 @@ MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
+    src/dialogs/settingsdialog.h \
     src/settings.h \
     src/systray.h
 
 SOURCES += \
-    src/main.cpp \
     src/core.cpp \
+    src/dialogs/settingsdialog.cpp \
+    src/main.cpp \
     src/settings.cpp \
     src/systray.cpp
 
-# FORMS += \
-#     forms/mainwindow.ui
+FORMS += \
+    src/dialogs/settingsdialog.ui
 
 RESOURCES += \
     images.qrc

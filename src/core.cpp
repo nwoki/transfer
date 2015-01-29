@@ -1,5 +1,6 @@
 #include "core.h"
 #include "settings.h"
+#include "dialogs/settingsdialog.h"
 #include "systray.h"
 
 class Core::Private
