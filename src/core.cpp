@@ -1,4 +1,5 @@
 #include "core.h"
+#include "discoverer.h"
 #include "settings.h"
 #include "dialogs/settingsdialog.h"
 #include "systray.h"
@@ -10,6 +11,7 @@ public:
         : systray(new Systray)
     {}
 
+    Discoverer discoverer;
     Systray *systray;
 };
 
@@ -24,6 +26,7 @@ Core::Core(QObject *parent)
     }
 
     // TODO start network magic. This is where the cool part comes into play
+    // discovery starts on initialization
 }
 
 Core::~Core()

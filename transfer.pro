@@ -19,12 +19,14 @@ MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
+    src/discoverer.h \
     src/dialogs/settingsdialog.h \
     src/settings.h \
     src/systray.h
 
 SOURCES += \
     src/core.cpp \
+    src/discoverer.cpp \
     src/dialogs/settingsdialog.cpp \
     src/main.cpp \
     src/settings.cpp \
