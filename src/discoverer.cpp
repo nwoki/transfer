@@ -1,3 +1,4 @@
+#include "device.h"
 #include "discoverer.h"
 #include "settings.h"
 
@@ -23,6 +24,9 @@ public:
     QUdpSocket *socket;
     QTimer *advertiseTimer;
     QString uuid;
+
+    // hash of devices on the LAN. key - uuid
+    QHash<QString, Device*> devices;
 };
 
 
@@ -71,6 +75,10 @@ Discoverer::~Discoverer()
 {
     delete d->socket;
     delete d->advertiseTimer;
+
+    qDeleteAll(d->devices);
+    d->devices.clear();
+
     delete d;
 }
 

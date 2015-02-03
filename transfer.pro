@@ -4,21 +4,19 @@
 #
 #-------------------------------------------------
 
-QT += core gui network
+QT += core gui network widgets
 
 CONFIG += c++11
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = transfer
 TEMPLATE = app
-
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
+    src/device.h \
     src/discoverer.h \
     src/dialogs/settingsdialog.h \
     src/settings.h \
@@ -26,6 +24,7 @@ HEADERS  += \
 
 SOURCES += \
     src/core.cpp \
+    src/device.cpp \
     src/discoverer.cpp \
     src/dialogs/settingsdialog.cpp \
     src/main.cpp \
