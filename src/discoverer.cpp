@@ -1,5 +1,8 @@
 #include "discoverer.h"
+#include "settings.h"
 
+#include <QtCore/QJsonDocument>
+#include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
 #include <QtNetwork/QNetworkInterface>
@@ -14,10 +17,12 @@ public:
     Private()
         : socket(new QUdpSocket)
         , advertiseTimer(new QTimer)
-        {};
+        , uuid(Settings::uuid())
+    {};
 
     QUdpSocket *socket;
     QTimer *advertiseTimer;
+    QString uuid;
 };
 
 
@@ -30,7 +35,6 @@ Discoverer::Discoverer(QObject *parent)
     d->socket->bind(QHostAddress::AnyIPv4, ADVERTISE_PORT, QAbstractSocket::ShareAddress);
     d->advertiseTimer->setInterval(2500);
     d->advertiseTimer->start();
-
 
     connect(d->socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
@@ -57,6 +61,7 @@ Discoverer::Discoverer(QObject *parent)
 
             if (!hostIps.contains(sender.toString())) {
                 qDebug() << "DATAGRAM RECEIVED: " << datagram;
+                // TODO parser
             }
         }
     });
@@ -72,7 +77,34 @@ Discoverer::~Discoverer()
 void Discoverer::advertise()
 {
     // TODO define discovery protocol
-    d->socket->writeDatagram("BUBBUBUBA", QHostAddress::Broadcast, ADVERTISE_PORT);
+    /*
+     * {
+     * sender: uuid
+     * action: {
+     *          type: advertise
+     * }
+     *
+     * action: {
+     *          type: transfer
+     *          fileName: <fileName>
+     *          mimetype: <type>
+     * }
+     *
+     * destination: uuid/<empty>
+     * }
+     */
+    QVariantMap advertiseMap;
+    QVariantMap actionMap;
+
+    advertiseMap.insert("sender", Settings::uuid());
+    advertiseMap.insert("destination", "");
+
+    actionMap.insert("type", "advertise");
+    advertiseMap.insert("action", actionMap);
+
+    QByteArray advertiseData = QJsonDocument::fromVariant(advertiseMap).toJson(QJsonDocument::Compact);
+
+    d->socket->writeDatagram(advertiseData, QHostAddress::Broadcast, ADVERTISE_PORT);
 }
 
 void Discoverer::onError(QAbstractSocket::SocketError socketError)

@@ -16,7 +16,7 @@ private:
     void prepareMenu();
 
     class Private;
-    Private const * d;
+    Private * const d;
 };
 
 #endif  // SYSTRAY_H

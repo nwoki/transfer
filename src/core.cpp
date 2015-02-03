@@ -11,8 +11,8 @@ public:
         : systray(new Systray)
     {}
 
-    Discoverer discoverer;
     Systray *systray;
+    Discoverer discoverer;
 };
 
 

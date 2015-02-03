@@ -25,7 +25,7 @@ private Q_SLOTS:
 
 private:
     class Private;
-    Private const * d;
+    Private * const d;
 };
 
 #endif  // DISCOVERER_H
