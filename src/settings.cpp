@@ -31,6 +31,12 @@ void Settings::resetUuid()
     settings.sync();
 }
 
+QString Settings::username()
+{
+    QSettings settings;
+    return settings.value("user/name").toString();
+}
+
 QString Settings::uuid()
 {
     QSettings settings;

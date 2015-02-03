@@ -82,12 +82,14 @@ void Discoverer::advertise()
      * sender: uuid
      * action: {
      *          type: advertise
+     *          user: <username>
      * }
      *
      * action: {
      *          type: transfer
      *          fileName: <fileName>
      *          mimetype: <type>
+     *          user: <username>
      * }
      *
      * destination: uuid/<empty>
@@ -100,6 +102,7 @@ void Discoverer::advertise()
     advertiseMap.insert("destination", "");
 
     actionMap.insert("type", "advertise");
+    actionMap.insert("user", Settings::username());
     advertiseMap.insert("action", actionMap);
 
     QByteArray advertiseData = QJsonDocument::fromVariant(advertiseMap).toJson(QJsonDocument::Compact);

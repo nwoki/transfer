@@ -13,6 +13,7 @@ public:
      * ~ settings dialog
      */
     static bool isFirstRun();
+    static QString username();
     static QString uuid();
 
 private:
