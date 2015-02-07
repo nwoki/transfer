@@ -12,16 +12,8 @@ public:
     ~Core();
 
 private:
-    /**
-     * checks settings file to see if the application is being launched
-     * for the first time. If so, prompt the user with:
-     * ~ web page with tutorial? TODO
-     * ~ settings dialog
-     */
-//     void checkFirstRun();
-
     class Private;
-    Private const * d;
+    Private * const d;
 };
 
 #endif  // CORE_H

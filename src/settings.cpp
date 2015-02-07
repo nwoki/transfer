@@ -2,6 +2,7 @@
 
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QUuid>
 
 #include <QtNetwork/QHostInfo>
 
@@ -14,6 +15,7 @@ bool Settings::isFirstRun()
     if (settings.value("user/name").toString().isEmpty()) {
         settings.setValue("user/name", QHostInfo::localHostName());
         settings.setValue("user/download_dir", QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
+        settings.setValue("user/uuid", uuid());
         settings.sync();
 
         firstRun = true;
@@ -21,3 +23,30 @@ bool Settings::isFirstRun()
 
     return firstRun;
 }
+
+void Settings::resetUuid()
+{
+    QSettings settings;
+    settings.setValue("user/uuid", QUuid::createUuid().toString().replace("{","").replace("}",""));
+    settings.sync();
+}
+
+QString Settings::username()
+{
+    QSettings settings;
+    return settings.value("user/name").toString();
+}
+
+QString Settings::uuid()
+{
+    QSettings settings;
+    QString uuid = settings.value("user/uuid").toString();
+
+    if (uuid.isEmpty()) {
+        resetUuid();
+    }
+
+    return settings.value("user/uuid").toString();
+}
+
+
