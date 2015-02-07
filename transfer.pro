@@ -18,6 +18,7 @@ HEADERS  += \
     src/core.h \
     src/discoverer.h \
     src/dialogs/settingsdialog.h \
+    src/parser.h \
     src/settings.h \
     src/systray.h \
     src/user.h \
@@ -28,6 +29,7 @@ SOURCES += \
     src/discoverer.cpp \
     src/dialogs/settingsdialog.cpp \
     src/main.cpp \
+    src/parser.cpp \
     src/settings.cpp \
     src/systray.cpp \
     src/user.cpp \

@@ -8,6 +8,7 @@ class User
 {
 public:
     User();
+    User(const QString &userName, const QString &uuid);
     ~User();
 
     QString userName() const;

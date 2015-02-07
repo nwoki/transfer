@@ -1,4 +1,5 @@
 #include "discoverer.h"
+#include "parser.h"
 #include "settings.h"
 #include "userlist.h"
 
@@ -19,12 +20,14 @@ public:
         : userList(userlist)
         , socket(new QUdpSocket)
         , advertiseTimer(new QTimer)
+        , parser(new Parser)
         , uuid(Settings::uuid())
     {};
 
     UserList *userList;
     QUdpSocket *socket;
     QTimer *advertiseTimer;
+    Parser *parser;
     QString uuid;
 };
 
@@ -39,6 +42,7 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
     d->advertiseTimer->setInterval(2500);
     d->advertiseTimer->start();
 
+    connect(d->parser, &Parser::userDiscovered, d->userList, &UserList::addUser);
     connect(d->socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
     connect(d->socket, &QUdpSocket::readyRead, [this] () {
@@ -62,9 +66,12 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
                 }
             }
 
+            // TODO remove after parse test
+            d->parser->parse(datagram);
+            // end
+
             if (!hostIps.contains(sender.toString())) {
-                qDebug() << "DATAGRAM RECEIVED: " << datagram;
-                // TODO parser
+                d->parser->parse(datagram);
             }
         }
     });
@@ -74,6 +81,7 @@ Discoverer::~Discoverer()
 {
     delete d->socket;
     delete d->advertiseTimer;
+    delete d->parser;
     delete d;
 }
 
@@ -106,6 +114,7 @@ void Discoverer::advertise()
 
     actionMap.insert("type", "advertise");
     actionMap.insert("user", Settings::username());
+    actionMap.insert("uuid", Settings::uuid());
     advertiseMap.insert("action", actionMap);
 
     QByteArray advertiseData = QJsonDocument::fromVariant(advertiseMap).toJson(QJsonDocument::Compact);

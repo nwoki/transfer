@@ -13,10 +13,12 @@ public:
 };
 
 
-UserList::UserList()
-    : d(new Private)
+UserList::UserList(QObject *parent)
+    : QObject(parent)
+    , d(new Private)
 {
-
+    qDeleteAll(d->users);
+    d->users.clear();
 }
 
 UserList::~UserList()
@@ -24,12 +26,11 @@ UserList::~UserList()
     delete d;
 }
 
-void UserList::addUser()
+void UserList::addUser(const QString &userName, const QString &uuid)
 {
-//     if (!d->users.contains()) {
-//         // add;
-//
-//     }
+    if (!d->users.contains(uuid)) {
+        d->users.insert(uuid, new User(userName, uuid));
+    }
 }
 
 QList<User*> UserList::users() const

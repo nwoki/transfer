@@ -15,6 +15,13 @@ User::User()
 {
 }
 
+User::User(const QString &userName, const QString &uuid)
+    : d(new Private)
+{
+    d->username = userName;
+    d->uuid = uuid;
+}
+
 User::~User()
 {
     delete d;
