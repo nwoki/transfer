@@ -1,6 +1,6 @@
-#include "device.h"
 #include "discoverer.h"
 #include "settings.h"
+#include "userlist.h"
 
 #include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
@@ -15,24 +15,23 @@
 class Discoverer::Private
 {
 public:
-    Private()
-        : socket(new QUdpSocket)
+    Private(UserList *userlist)
+        : userList(userlist)
+        , socket(new QUdpSocket)
         , advertiseTimer(new QTimer)
         , uuid(Settings::uuid())
     {};
 
+    UserList *userList;
     QUdpSocket *socket;
     QTimer *advertiseTimer;
     QString uuid;
-
-    // hash of devices on the LAN. key - uuid
-    QHash<QString, Device*> devices;
 };
 
 
-Discoverer::Discoverer(QObject *parent)
+Discoverer::Discoverer(UserList *userlist, QObject *parent)
     : QObject(parent)
-    , d(new Private)
+    , d(new Private(userlist))
 {
     connect(d->advertiseTimer, &QTimer::timeout, this, &Discoverer::advertise);
 
@@ -75,10 +74,6 @@ Discoverer::~Discoverer()
 {
     delete d->socket;
     delete d->advertiseTimer;
-
-    qDeleteAll(d->devices);
-    d->devices.clear();
-
     delete d;
 }
 

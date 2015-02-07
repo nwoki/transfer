@@ -1,14 +1,14 @@
-#ifndef DEVICE_H
-#define DEVICE_H
+#ifndef USER_H
+#define USER_H
 
 
 #include <QtCore/QString>
 
-class Device
+class User
 {
 public:
-    Device();
-    ~Device();
+    User();
+    ~User();
 
     QString userName() const;
     QString uuid() const;
@@ -18,4 +18,4 @@ private:
     Private * const d;
 };
 
-#endif  // Device
+#endif  // USER_H

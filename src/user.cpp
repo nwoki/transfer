@@ -1,6 +1,6 @@
-#include "device.h"
+#include "user.h"
 
-class Device::Private
+class User::Private
 {
 public:
     Private() {}
@@ -10,22 +10,22 @@ public:
 };
 
 
-Device::Device()
+User::User()
     : d(new Private)
 {
 }
 
-Device::~Device()
+User::~User()
 {
     delete d;
 }
 
-QString Device::userName() const
+QString User::userName() const
 {
     return d->username;
 }
 
-QString Device::uuid() const
+QString User::uuid() const
 {
     return d->uuid;
 }

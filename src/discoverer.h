@@ -5,6 +5,7 @@
 
 #include <QtNetwork/QAbstractSocket>
 
+class UserList;
 
 /**
  * Class in charge of detecting other available nodes (other computers
@@ -16,7 +17,7 @@ class Discoverer : public QObject
     Q_OBJECT
 
 public:
-    Discoverer(QObject *parent = 0);
+    Discoverer(UserList *userlist, QObject *parent = 0);
     ~Discoverer();
 
 private Q_SLOTS:
