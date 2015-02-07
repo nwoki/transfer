@@ -8,8 +8,8 @@ class Systray::Private
 {
 public:
     Private()
-        : sendFileAction(new QAction(tr("Send&File"), nullptr))
-        , settingsAction(new QAction(tr("&Settings"), nullptr))
+        : sendFileAction(new QAction(QIcon(":/images/icons/arrow-up-double.png"), tr("Send&File"), nullptr))
+        , settingsAction(new QAction(QIcon(":/images/icons/configure.png"), tr("&Settings"), nullptr))
         , settingsDialog(new SettingsDialog)
     {};
 
