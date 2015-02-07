@@ -1,18 +1,22 @@
 #include "core.h"
 #include "discoverer.h"
 #include "settings.h"
-#include "dialogs/settingsdialog.h"
 #include "systray.h"
+#include "userlist.h"
+#include "dialogs/settingsdialog.h"
 
 class Core::Private
 {
 public:
     Private()
-        : systray(new Systray)
+        : userList(new UserList)
+        , systray(new Systray)
+        , discoverer(new Discoverer(userList))
     {}
 
+    UserList *userList;
     Systray *systray;
-    Discoverer discoverer;
+    Discoverer *discoverer;
 };
 
 
@@ -32,6 +36,8 @@ Core::Core(QObject *parent)
 Core::~Core()
 {
     delete d->systray;
+    delete d->discoverer;
+    delete d->userList;
     delete d;
 }
 

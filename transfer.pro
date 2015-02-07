@@ -16,20 +16,24 @@ MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
-    src/device.h \
     src/discoverer.h \
     src/dialogs/settingsdialog.h \
+    src/parser.h \
     src/settings.h \
-    src/systray.h
+    src/systray.h \
+    src/user.h \
+    src/userlist.h
 
 SOURCES += \
     src/core.cpp \
-    src/device.cpp \
     src/discoverer.cpp \
     src/dialogs/settingsdialog.cpp \
     src/main.cpp \
+    src/parser.cpp \
     src/settings.cpp \
-    src/systray.cpp
+    src/systray.cpp \
+    src/user.cpp \
+    src/userlist.cpp
 
 FORMS += \
     src/dialogs/settingsdialog.ui
