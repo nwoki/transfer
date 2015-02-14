@@ -7,17 +7,18 @@
 #include <QtCore/QStandardPaths>
 
 #include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
+
+// TODO check todo's in the db.sql file in the "sql/" folder
 
 #define DB_SQL_CREATE_QUERY "\
-    DROP TABLE IF EXISTS users;\
-    -- TODO fix varchar lengths\
     create table users (\
         id int NOT NULL PRIMARY KEY,\
         username varchar (50) NOT NULL,\
         uuid varchar (50) NOT NULL\
--- possible profile image url (to fetch from the internet)\
     );"
+
 
 class DbHandler::Private
 {
@@ -25,7 +26,8 @@ public:
     Private()
         : dbLocPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
         , dbFileName("transfer_db.sqlite")
-    {}
+    {
+    }
 
     QString dbLocPath;
     QString dbFileName;
@@ -88,12 +90,18 @@ bool DbHandler::createDatabase()
 
     if (open()) {
         success = true;
-        qDebug() << "OPENED DATABAASE";
 
+        // now create the db
+        QSqlQuery createQuery = exec(DB_SQL_CREATE_QUERY);
+
+        if (createQuery.lastError().type() != QSqlError::NoError) {
+            qDebug() << "[DbHandler::createDatabase] ERROR: " << createQuery.lastError().text();
+            success = false;
+        }
     } else {
-        qDebug() << "DB NOT OPEN. DAFUQ!=";
+        qDebug() << "[DbHandler::createDatabase] ERROR: can't open database - " << lastError().text();
+        success = false;
     }
 
-    qDebug() << "SUCCESS : " << success;
     return success;
 }
