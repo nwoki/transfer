@@ -1,3 +1,4 @@
+#include "dbhandler.h"
 #include "user.h"
 #include "userlist.h"
 
@@ -6,7 +7,11 @@
 class UserList::Private
 {
 public:
-    Private() {}
+    Private()
+        : dbHandler(new DbHandler)
+    {}
+
+    DbHandler *dbHandler;
 
     // hash of devices on the LAN. key - uuid
     QHash<QString, User*> users;
@@ -17,12 +22,14 @@ UserList::UserList(QObject *parent)
     : QObject(parent)
     , d(new Private)
 {
-    qDeleteAll(d->users);
-    d->users.clear();
 }
 
 UserList::~UserList()
 {
+    qDeleteAll(d->users);
+    d->users.clear();
+
+    delete d->dbHandler;
     delete d;
 }
 

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui network widgets
+QT += core gui network widgets sql
 
 CONFIG += c++11
 
@@ -16,6 +16,7 @@ MOC_DIR = .moc
 
 HEADERS  += \
     src/core.h \
+    src/dbhandler.h \
     src/discoverer.h \
     src/dialogs/settingsdialog.h \
     src/parser.h \
@@ -26,6 +27,7 @@ HEADERS  += \
 
 SOURCES += \
     src/core.cpp \
+    src/dbhandler.cpp \
     src/discoverer.cpp \
     src/dialogs/settingsdialog.cpp \
     src/main.cpp \
