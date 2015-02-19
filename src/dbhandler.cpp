@@ -144,3 +144,24 @@ bool DbHandler::createDatabase()
 
     return success;
 }
+
+QList<User*> DbHandler::userList()
+{
+    QList<User*> userList;
+    QSqlQuery extractionQuery = exec(QString("select username, uuid from users"));
+
+    if (extractionQuery.lastError().type() == QSqlError::NoError) {
+
+        while (extractionQuery.next()) {
+            User *user = new User(extractionQuery.value(0).toString()
+                                , extractionQuery.value(1).toString());
+
+            userList.append(user);
+        }
+
+    } else {
+        qDebug()<< "[DbHandler::userList] ERROR: " << extractionQuery.lastError().text();
+    }
+
+    return userList;
+}

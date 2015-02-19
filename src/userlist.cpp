@@ -22,6 +22,10 @@ UserList::UserList(QObject *parent)
     : QObject(parent)
     , d(new Private)
 {
+    // load userlist from database
+    for (User *user : d->dbHandler->userList()) {
+        d->users.insert(user->uuid(), user);
+    }
 }
 
 UserList::~UserList()

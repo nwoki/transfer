@@ -1,6 +1,8 @@
 #ifndef DBHANDLER_H
 #define DBHANDLER_H
 
+#include <QtCore/QList>
+
 #include <QtSql/QSqlDatabase>
 
 class User;
@@ -16,7 +18,11 @@ public:
     DbHandler();
     ~DbHandler();
 
+    /** adds a user to the database */
     void addUser(User *user);
+
+    /** retrieves the list of saved users on the database */
+    QList<User *> userList();
 
 private:
     bool createDatabase();
