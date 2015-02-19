@@ -36,7 +36,10 @@ UserList::~UserList()
 void UserList::addUser(const QString &userName, const QString &uuid)
 {
     if (!d->users.contains(uuid)) {
-        d->users.insert(uuid, new User(userName, uuid));
+        User *user = new User(userName, uuid);
+
+        d->users.insert(uuid, user);
+        d->dbHandler->addUser(user);
     }
 }
 

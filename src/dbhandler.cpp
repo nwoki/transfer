@@ -14,10 +14,12 @@
 
 #define DB_SQL_CREATE_QUERY "\
     create table users (\
-        id int NOT NULL PRIMARY KEY,\
-        username varchar (50) NOT NULL,\
-        uuid varchar (50) NOT NULL\
+        id INTEGER PRIMARY KEY,\
+        username TEXT NOT NULL,\
+        uuid TEXT NOT NULL\
     );"
+
+#define DB_FILE_NAME "transfer_db.sqlite"
 
 
 class DbHandler::Private
@@ -25,12 +27,14 @@ class DbHandler::Private
 public:
     Private()
         : dbLocPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
-        , dbFileName("transfer_db.sqlite")
+        , dbFileName(DB_FILE_NAME)
+        , dbStatus(false)
     {
     }
 
     QString dbLocPath;
     QString dbFileName;
+    bool dbStatus;
 };
 
 
@@ -38,15 +42,22 @@ DbHandler::DbHandler()
     : QSqlDatabase("QSQLITE")
     , d(new Private)
 {
-    bool dbCreateResult = false;
-
     // check if the database exists
     if (!QFile::exists(d->dbLocPath + QDir::separator() + d->dbFileName)) {
-        dbCreateResult = createDatabase();
+        d->dbStatus = createDatabase();
+    } else {
+        setDatabaseName(d->dbLocPath + QDir::separator() + d->dbFileName);
+
+        d->dbStatus = open();
+        qDebug() << "[DbHandler::DbHandler] opening database" << d->dbStatus;
+
+        if (!d->dbStatus) {
+            qDebug() << "[DbHandler::DbHandler] can't open db: " << lastError().text();
+        }
     }
 
     // open connection to the db
-    if (!dbCreateResult) {
+    if (!d->dbStatus) {
         // TODO show db error message
         qDebug() << "DB ERROR: " << lastError().text();
     }
@@ -61,6 +72,34 @@ DbHandler::~DbHandler()
 
 void DbHandler::addUser(User *user)
 {
+    qDebug("[DbHandler::addUser]");
+
+    if (!d->dbStatus) {
+        return;
+    }
+
+    // check if user exists on the database
+    QSqlQuery existQuery = exec(QString("select id from users where uuid=\"%1\";").arg(user->uuid()));
+
+    if (existQuery.lastError().type() != QSqlError::NoError) {
+        qDebug() << "[DbHandler::createDatabase] ERROR: " << existQuery.lastError().text();
+        return;
+    }
+
+    QString userId;
+
+    // check the result of the query.
+    if (!existQuery.next()) {
+        qDebug() << "[DbHandler::addUser] no record of user with uuid = " << user->uuid();
+
+        QSqlQuery addUserQuery = exec(QString("insert into users values (NULL, \"%1\", \"%2\")")
+                                .arg(user->userName())
+                                .arg(user->uuid()));
+
+        if (addUserQuery.lastError().type() != QSqlError::NoError) {
+            qDebug() << "[DbHandler::addUser] ERROR: " << addUserQuery.lastError().text();
+        }
+    }
 }
 
 bool DbHandler::createDatabase()
