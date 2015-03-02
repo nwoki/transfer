@@ -10,7 +10,7 @@ class Core::Private
 public:
     Private()
         : userList(new UserList)
-        , systray(new Systray)
+        , systray(new Systray(userList))
         , discoverer(new Discoverer(userList))
     {}
 

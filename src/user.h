@@ -1,18 +1,33 @@
 #ifndef USER_H
 #define USER_H
 
-
+#include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QVariant>
 
-class User
+class User : public QObject
 {
+    Q_OBJECT
+
+    Q_PROPERTY (QString userName        READ userName)
+    Q_PROPERTY (QString uuid            READ uuid)
+
 public:
-    User();
+    enum Roles {
+        userNameRole = Qt::UserRole + 1,
+        uuidRole
+    };
+
+    User(QObject *parent = 0);
     User(const QString &userName, const QString &uuid);
     ~User();
 
+    QVariant data(int role) const;
+
     QString userName() const;
     QString uuid() const;
+
+    bool operator==(const User &user);
 
 private:
     class Private;

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/sendfile/main.qml</file>
+        <file>qml/sendfile/UserDelegate.qml</file>
+    </qresource>
+</RCC>

@@ -2,7 +2,8 @@
 #include "user.h"
 #include "userlist.h"
 
-#include <QtCore/QHash>
+#include <QtCore/QMetaProperty>
+
 
 class UserList::Private
 {
@@ -13,18 +14,19 @@ public:
 
     DbHandler *dbHandler;
 
-    // hash of devices on the LAN. key - uuid
-    QHash<QString, User*> users;
+    // list of user uuid contained in the user list
+    QList<QString> userUuids;
+    QList<User*> users;
 };
 
 
 UserList::UserList(QObject *parent)
-    : QObject(parent)
+    : QAbstractListModel(parent)
     , d(new Private)
 {
     // load userlist from database
     for (User *user : d->dbHandler->userList()) {
-        d->users.insert(user->uuid(), user);
+        addUserToModel(user);
     }
 }
 
@@ -32,22 +34,66 @@ UserList::~UserList()
 {
     qDeleteAll(d->users);
     d->users.clear();
+    d->userUuids.clear();
 
     delete d->dbHandler;
     delete d;
 }
 
+void UserList::addUserToModel(User *user)
+{
+    beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
+
+    d->userUuids.append(user->uuid());
+    d->users.append(user);
+    d->dbHandler->addUser(user);
+
+    endInsertRows();
+}
+
 void UserList::addUser(const QString &userName, const QString &uuid)
 {
-    if (!d->users.contains(uuid)) {
+    if (!d->userUuids.contains(uuid)) {
         User *user = new User(userName, uuid);
-
-        d->users.insert(uuid, user);
-        d->dbHandler->addUser(user);
+        addUserToModel(user);
     }
 }
 
-QList<User*> UserList::users() const
+// void UserList::addUsers(const QList<User*> &users)
+// {
+//     for (int i = 0; i < users.count(); ++i) {
+//         if (!d->users.contains(users.at(i))) {
+//             addUser(users.at(i));
+//         }
+//     }
+// }
+
+
+QVariant UserList::data(const QModelIndex &index, int role) const
 {
-    return d->users.values();
+    if (index.row() < 0) {
+        // FAIL
+        return QVariant();
+    } else {
+        return d->users.at(index.row())->data(role);
+    }
 }
+
+QHash<int, QByteArray> UserList::roleNames() const
+{
+    /** This method transforms all the object's properties to roles */
+    QHash<int, QByteArray> names;
+
+    for (int i = User::staticMetaObject.propertyOffset(); i < User::staticMetaObject.propertyCount(); ++i) {
+        names[i] = QByteArray(User::staticMetaObject.property(i).name());
+    }
+
+    return names;
+}
+
+int UserList::rowCount(const QModelIndex &index) const
+{
+    Q_UNUSED(index);
+    return d->users.count();
+}
+

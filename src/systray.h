@@ -3,14 +3,19 @@
 
 #include <QtWidgets/QSystemTrayIcon>
 
+class UserList;
+
 
 class Systray : public QSystemTrayIcon
 {
     Q_OBJECT
 
 public:
-    Systray(QObject *parent = 0);
+    Systray(UserList *userList, QObject *parent = 0);
     ~Systray();
+
+Q_SIGNALS:
+    void showSendFileView();
 
 private:
     void prepareMenu();
