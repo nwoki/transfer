@@ -3,14 +3,8 @@ import QtQuick 2.4
 Item {
     id: root;
 
-    width: 400;
+    width: 300;
     height: 400;
-
-    Rectangle {
-        color: "transparent";
-        anchors.fill: parent;
-        border.color: "red";
-    }
 
     ListView {
         id: userList;
@@ -29,9 +23,18 @@ Item {
             UserDelegate {
                 clientUuid: uuid;
                 clientUserName: userName;
+//                clientSelected: selected;
 
-                height: 20;
+                height: 60;
                 width: parent.width;
+
+                Component.onCompleted: {
+                    console.log("SELECTED IS: " + selected);
+                }
+
+//                 onSelectedChanged: {
+//                     console.log("SELECTED IS: " + selected);
+//                 }
             }
 
         Rectangle {

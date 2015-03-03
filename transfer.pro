@@ -43,3 +43,9 @@ FORMS += \
 RESOURCES += \
     images.qrc \
     qml.qrc
+
+OTHER_FILES += \
+    qml/sendfile/main.qml \
+    qml/sendfile/Avatar.qml \
+    qml/sendfile/SelectionStatus.qml \
+    qml/sendfile/UserDelegate.qml

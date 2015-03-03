@@ -16,7 +16,7 @@ public:
 
     // list of user uuid contained in the user list
     QList<QString> userUuids;
-    QList<User*> users;
+    QHash<QString, User*> users;
 };
 
 
@@ -45,7 +45,7 @@ void UserList::addUserToModel(User *user)
     beginInsertRows(QModelIndex(), rowCount(), rowCount() + 1);
 
     d->userUuids.append(user->uuid());
-    d->users.append(user);
+    d->users.insert(user->uuid(), user);
     d->dbHandler->addUser(user);
 
     endInsertRows();
@@ -72,10 +72,9 @@ void UserList::addUser(const QString &userName, const QString &uuid)
 QVariant UserList::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0) {
-        // FAIL
         return QVariant();
     } else {
-        return d->users.at(index.row())->data(role);
+        return d->users.value(d->userUuids.at(index.row()))->data(role);
     }
 }
 
@@ -94,6 +93,16 @@ QHash<int, QByteArray> UserList::roleNames() const
 int UserList::rowCount(const QModelIndex &index) const
 {
     Q_UNUSED(index);
-    return d->users.count();
+    return d->userUuids.count();
 }
+
+#include <QtCore/QDebug>
+
+void UserList::toggleSelected(const QString &uuid)
+{
+    qDebug() << "TOGGLING: " << uuid << " from: " << d->users.value(uuid)->isSelected();
+    d->users.value(uuid)->toggleSelected();
+    qDebug() << "TO: " << d->users.value(uuid)->isSelected();
+}
+
 

@@ -24,6 +24,14 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
+    /**
+     * toggles the "selected" status of the specified user
+     * @param uuid uuid of the user to toggle the selection of
+     */
+    Q_INVOKABLE void toggleSelected(const QString &uuid);
+
+    // TODO user selected status reset
+
 public Q_SLOTS:
     /** adds a user to the list */
     void addUser(const QString &userName, const QString &uuid);

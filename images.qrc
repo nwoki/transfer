@@ -3,5 +3,7 @@
         <file>images/icons/tray_icon.png</file>
         <file>images/icons/configure.png</file>
         <file>images/icons/arrow-up-double.png</file>
+        <file>images/icons/avatar_placeholder_128.jpg</file>
+        <file>images/avatar_mask.png</file>
     </qresource>
 </RCC>

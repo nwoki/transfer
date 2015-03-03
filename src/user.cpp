@@ -6,8 +6,11 @@
 class User::Private
 {
 public:
-    Private() {}
+    Private()
+        : selected(false)
+    {}
 
+    bool selected;
     QString username;
     QString uuid;
 };
@@ -34,6 +37,22 @@ User::~User()
 QVariant User::data(int role) const
 {
     return metaObject()->property(role).read(this);
+}
+
+bool User::isSelected() const
+{
+    return d->selected;
+}
+
+void User::toggleSelected()
+{
+    if (d->selected) {
+        d->selected = false;
+    } else {
+        d->selected = true;
+    }
+
+    Q_EMIT userDataChanged();
 }
 
 QString User::userName() const
