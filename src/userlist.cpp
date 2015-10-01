@@ -2,6 +2,7 @@
 #include "user.h"
 #include "userlist.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QMetaProperty>
 
 
@@ -96,13 +97,11 @@ int UserList::rowCount(const QModelIndex &index) const
     return d->userUuids.count();
 }
 
-#include <QtCore/QDebug>
-
 void UserList::toggleSelected(const QString &uuid)
 {
-    qDebug() << "TOGGLING: " << uuid << " from: " << d->users.value(uuid)->isSelected();
+    qDebug() << "[UserList::toggleSelected] TOGGLING: " << uuid << " from: " << d->users.value(uuid)->isSelected();
     d->users.value(uuid)->toggleSelected();
-    qDebug() << "TO: " << d->users.value(uuid)->isSelected();
+    qDebug() << "[UserList::toggleSelected] TO: " << d->users.value(uuid)->isSelected();
 }
 
 

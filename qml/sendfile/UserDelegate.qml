@@ -46,21 +46,22 @@ Item {
         }
     }
 
-    SelectionStatus {
-        id: selectionStatus;
-
-//        selected: root.clientSelected;
-        selected: false;
-
-        width: 25;
-        height: 25;
-
-        anchors {
-            verticalCenter: parent.verticalCenter;
-            right: parent.right;
-            rightMargin: 20;
-        }
-    }
+    // Check this out. It was causing the listview to show doubles
+//     SelectionStatus {
+//         id: selectionStatus;
+//
+// //        selected: root.clientSelected;
+//         selected: false;
+//
+//         width: 25;
+//         height: 25;
+//
+//         anchors {
+//             verticalCenter: parent.verticalCenter;
+//             right: parent.right;
+//             rightMargin: 20;
+//         }
+//     }
 
     Rectangle {
         id: seperator;
