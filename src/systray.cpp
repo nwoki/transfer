@@ -2,6 +2,8 @@
 #include "systray.h"
 #include "userlist.h"
 
+#include <QtCore/QDebug>
+
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
@@ -44,7 +46,7 @@ public:
     QQuickView *sendFileView;
 };
 
-#include <QtCore/QDebug>
+
 Systray::Systray(UserList *userList, QObject *parent)
     : QSystemTrayIcon(parent)
     , d(new Private)

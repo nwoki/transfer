@@ -2,6 +2,7 @@
 #include "user.h"
 #include "userlist.h"
 
+#include <QtCore/QDebug>
 #include <QtCore/QMetaProperty>
 
 
