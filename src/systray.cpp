@@ -21,13 +21,13 @@ public:
         , settingsAction(new QAction(QIcon(":/images/icons/configure.png"), tr("&Settings"), nullptr))
         , settingsDialog(new SettingsDialog)
         , userList(nullptr)
-        , sendFileView(new QQuickView)
+        , userListView(new QQuickView)
     {
         QDesktopWidget *desktop = QApplication::desktop();
 
         // set the QML view to the center of the screen
-        sendFileView->setX((desktop->width()/2) - sendFileView->width()/2);
-        sendFileView->setY((desktop->height()/2) - sendFileView->height()/2);
+        userListView->setX((desktop->width()/2) - userListView->width()/2);
+        userListView->setY((desktop->height()/2) - userListView->height()/2);
     }
 
     ~Private() {
@@ -36,14 +36,14 @@ public:
         delete sendFileAction;
         delete settingsAction;
         delete settingsDialog;
-        delete sendFileView;
+        delete userListView;
     }
 
     QAction *sendFileAction;
     QAction *settingsAction;
     SettingsDialog *settingsDialog;
     UserList *userList;
-    QQuickView *sendFileView;
+    QQuickView *userListView;
 };
 
 
@@ -54,21 +54,21 @@ Systray::Systray(UserList *userList, QObject *parent)
     d->userList = userList;
 
     // set the user model here. Otherwise I end up with a null ptr. Then, load the qml view file
-    d->sendFileView->rootContext()->setContextProperty("userListModel", d->userList);
-    d->sendFileView->setSource(QUrl("qrc:///qml/main.qml"));
+    d->userListView->rootContext()->setContextProperty("userListModel", d->userList);
+    d->userListView->setSource(QUrl("qrc:///qml/main.qml"));
 
     // TODO actions
-//     connect(d->sendFileAction, &QAction::triggered, d->sendFileView, &QQuickView::show);
+//     connect(d->sendFileAction, &QAction::triggered, d->userListView, &QQuickView::show);
 
 
     connect(d->settingsAction, &QAction::triggered, d->settingsDialog, &QDialog::show);
 
     connect(this, &QSystemTrayIcon::activated, this, [this] (QSystemTrayIcon::ActivationReason reason) {
         if (reason == QSystemTrayIcon::Trigger) {
-            if (d->sendFileView->isVisible()) {
-                d->sendFileView->hide();
+            if (d->userListView->isVisible()) {
+                d->userListView->hide();
             } else {
-                d->sendFileView->show();
+                d->userListView->show();
             }
         } else if (reason == QSystemTrayIcon::Context) {
             contextMenu()->show();
