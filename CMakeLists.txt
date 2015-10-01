@@ -17,3 +17,4 @@ add_definitions("-std=gnu++11")
 
 # src
 add_subdirectory(src)
+add_subdirectory(testapp)
