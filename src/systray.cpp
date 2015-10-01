@@ -55,10 +55,25 @@ Systray::Systray(UserList *userList, QObject *parent)
 
     // set the user model here. Otherwise I end up with a null ptr. Then, load the qml view file
     d->sendFileView->rootContext()->setContextProperty("userListModel", d->userList);
-    d->sendFileView->setSource(QUrl("qrc:///qml/sendfile/main.qml"));
+    d->sendFileView->setSource(QUrl("qrc:///qml/main.qml"));
 
-    connect(d->sendFileAction, &QAction::triggered, d->sendFileView, &QQuickView::show);
+    // TODO actions
+//     connect(d->sendFileAction, &QAction::triggered, d->sendFileView, &QQuickView::show);
+
+
     connect(d->settingsAction, &QAction::triggered, d->settingsDialog, &QDialog::show);
+
+    connect(this, &QSystemTrayIcon::activated, this, [this] (QSystemTrayIcon::ActivationReason reason) {
+        if (reason == QSystemTrayIcon::Trigger) {
+            if (d->sendFileView->isVisible()) {
+                d->sendFileView->hide();
+            } else {
+                d->sendFileView->show();
+            }
+        } else if (reason == QSystemTrayIcon::Context) {
+            contextMenu()->show();
+        }
+    });
 
     setIcon(QIcon(":/images/icons/tray_icon.png"));
     prepareMenu();
