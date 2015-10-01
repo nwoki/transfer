@@ -25,6 +25,12 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     /**
+     * @param uuid uuid of the user we want
+     * @return a pointer to the user requested.
+     */
+    Q_INVOKABLE QObject *user(const QString &uuid);
+
+    /**
      * toggles the "selected" status of the specified user
      * @param uuid uuid of the user to toggle the selection of
      */

@@ -3,23 +3,15 @@ import QtQuick 2.4
 Item {
     id: root;
 
-    property string clientAvatar: "qrc:/images/icons/avatar_placeholder_128.jpg";
     property string clientUuid: "";
     property string clientUserName: "";
+    property bool clientOnlineStatus;
 
-    Rectangle {
-        id: bg;
-        anchors.fill: parent;
-        color: "white";
-    }
-
-    Avatar {
+    OnlineStatusAvatar {
         id: avatar;
 
-        avatarSrc: root.clientAvatar;
-
-        width: 48;
-        height: 48;
+        width: 24;
+        height: 24;
 
         anchors {
             left: parent.left;
@@ -37,7 +29,7 @@ Item {
         anchors {
             left: avatar.right;
             leftMargin: 20;
-            bottom: parent.verticalCenter;
+            verticalCenter: parent.verticalCenter;
         }
 
         font {
@@ -78,9 +70,19 @@ Item {
     MouseArea {
         id: clickArea;
         anchors.fill: parent;
-        onClicked: {
-//            selectionStatus.state = "selected";
-            userListModel.toggleSelected(root.clientUuid);
+
+        // TODO use for selection
+//         onClicked: {
+//             avatar.online = true;
+//         }
+    }
+
+    // Connect with the user object for online status
+    Connections {
+        target: userListModel.user(root.clientUuid);
+
+        onOnlineStatusChanged: {
+            avatar.online = userListModel.user(root.clientUuid).online;
         }
     }
 }
