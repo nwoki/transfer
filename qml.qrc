@@ -4,5 +4,6 @@
         <file>qml/sendfile/UserDelegate.qml</file>
         <file>qml/sendfile/SelectionStatus.qml</file>
         <file>qml/sendfile/Avatar.qml</file>
+        <file>qml/sendfile/OnlineStatusAvatar.qml</file>
     </qresource>
 </RCC>

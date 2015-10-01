@@ -23,24 +23,9 @@ Item {
             UserDelegate {
                 clientUuid: uuid;
                 clientUserName: userName;
-//                clientSelected: selected;
 
-                height: 60;
+                height: 30;
                 width: parent.width;
-
-                Component.onCompleted: {
-                    console.log("SELECTED IS: " + selected);
-                }
-
-//                 onSelectedChanged: {
-//                     console.log("SELECTED IS: " + selected);
-//                 }
             }
-
-        Rectangle {
-            anchors.fill: parent;
-            color: "transparent";
-            border.color: "purple";
-        }
     }
 }
