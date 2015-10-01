@@ -37,8 +37,8 @@ void Parser::parse(const QByteArray &data)
     QJsonObject actionObj = rootObj.value("action").toObject();
 
     if (actionObj.value("type").toString() == "advertise") {
-        qDebug() << "user discovered: " << actionObj.value("user").toString() << actionObj.value("uuid").toString();
-        Q_EMIT userDiscovered(actionObj.value("user").toString(), actionObj.value("uuid").toString());
+        qDebug() << "user discovered: " << actionObj.value("user").toString() << rootObj.value("sender").toString();
+        Q_EMIT userDiscovered(actionObj.value("user").toString(), rootObj.value("sender").toString());
     }
 
     // TODO the other actions

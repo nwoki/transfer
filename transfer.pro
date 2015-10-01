@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui network widgets sql
+QT += core gui network widgets sql quick
 
 CONFIG += c++11
 
@@ -41,4 +41,11 @@ FORMS += \
     src/dialogs/settingsdialog.ui
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    qml.qrc
+
+OTHER_FILES += \
+    qml/sendfile/main.qml \
+    qml/sendfile/Avatar.qml \
+    qml/sendfile/SelectionStatus.qml \
+    qml/sendfile/UserDelegate.qml

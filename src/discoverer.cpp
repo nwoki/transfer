@@ -114,7 +114,6 @@ void Discoverer::advertise()
 
     actionMap.insert("type", "advertise");
     actionMap.insert("user", Settings::username());
-    actionMap.insert("uuid", Settings::uuid());
     advertiseMap.insert("action", actionMap);
 
     QByteArray advertiseData = QJsonDocument::fromVariant(advertiseMap).toJson(QJsonDocument::Compact);
