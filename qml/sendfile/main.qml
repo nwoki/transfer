@@ -23,6 +23,7 @@ Item {
             UserDelegate {
                 clientUuid: uuid;
                 clientUserName: userName;
+                clientOnlineStatus: online;
 
                 height: 30;
                 width: parent.width;

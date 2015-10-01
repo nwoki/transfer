@@ -5,6 +5,7 @@ Item {
 
     property string clientUuid: "";
     property string clientUserName: "";
+    property bool clientOnlineStatus;
 
     OnlineStatusAvatar {
         id: avatar;
@@ -74,5 +75,14 @@ Item {
 //         onClicked: {
 //             avatar.online = true;
 //         }
+    }
+
+    // Connect with the user object for online status
+    Connections {
+        target: userListModel.user(root.clientUuid);
+
+        onOnlineStatusChanged: {
+            avatar.online = userListModel.user(root.clientUuid).online;
+        }
     }
 }

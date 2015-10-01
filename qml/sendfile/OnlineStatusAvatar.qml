@@ -12,15 +12,9 @@ Item {
         height: root.height;
 
         smooth: true;
+        radius: 100;
 
         anchors.centerIn: parent;
-        color: "red";
-
-        radius: 100;
-    }
-
-    onOnlineChanged: {
-        console.log("CHANGED TO: " + root.online)
     }
 
     states: [

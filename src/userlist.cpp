@@ -57,6 +57,9 @@ void UserList::addUser(const QString &userName, const QString &uuid)
     if (!d->userUuids.contains(uuid)) {
         User *user = new User(userName, uuid);
         addUserToModel(user);
+    } else {
+        // treat it as a ping
+        d->users.value(uuid)->keepAlive();
     }
 }
 
@@ -95,6 +98,11 @@ int UserList::rowCount(const QModelIndex &index) const
 {
     Q_UNUSED(index);
     return d->userUuids.count();
+}
+
+QObject* UserList::user(const QString &uuid)
+{
+    return d->users.value(uuid);
 }
 
 void UserList::toggleSelected(const QString &uuid)
