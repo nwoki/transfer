@@ -9,9 +9,9 @@ class Core::Private
 {
 public:
     Private()
-        : userList(new UserList)
-        , systray(new Systray(userList))
-        , discoverer(new Discoverer(userList))
+//         : userList(new UserList)
+        : systray(new Systray(userList))
+//         , discoverer(new Discoverer(userList))
     {}
 
     UserList *userList;
@@ -35,9 +35,9 @@ Core::Core(QObject *parent)
 
 Core::~Core()
 {
-    delete d->userList;
-    delete d->systray;
-    delete d->discoverer;
+//     delete d->userList;
+//     delete d->systray;
+//     delete d->discoverer;
     delete d;
 }
 

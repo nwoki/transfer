@@ -3,12 +3,15 @@
 #include "settings.h"
 #include "userlist.h"
 
+#include <QtCore/QDir>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 
 #include <QtNetwork/QNetworkInterface>
 #include <QtNetwork/QUdpSocket>
+
+#include <QtWidgets/QFileDialog>
 
 
 #define ADVERTISE_PORT 5555
@@ -125,4 +128,19 @@ void Discoverer::onError(QAbstractSocket::SocketError socketError)
 {
     qDebug() << "ERROR: " << socketError;
     qDebug() << d->socket->errorString();
+}
+
+void Discoverer::sendFileToUser(const QString &uuid)
+{
+    if (uuid.isEmpty() || d->userList->user(uuid) == nullptr) {
+        return;
+    }
+
+    QString file = QFileDialog::getOpenFileName(nullptr, tr("Select file"), QDir::homePath());
+
+    if (file.isEmpty()) {
+        return;
+    } else {
+        Q_EMIT sendFile(uuid, file);
+    }
 }

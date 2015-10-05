@@ -1,4 +1,6 @@
 #include "dialogs/settingsdialog.h"
+#include "discoverer.h"
+#include "settings.h"
 #include "systray.h"
 #include "userlist.h"
 
@@ -20,8 +22,9 @@ public:
         : sendFileAction(new QAction(QIcon(":/images/icons/arrow-up-double.png"), tr("Send&File"), nullptr))
         , settingsAction(new QAction(QIcon(":/images/icons/configure.png"), tr("&Settings"), nullptr))
         , settingsDialog(new SettingsDialog)
-        , userList(nullptr)
+        , userList(new UserList)
         , userListView(new QQuickView)
+        , discoverer(new Discoverer(userList))
     {
         QDesktopWidget *desktop = QApplication::desktop();
 
@@ -37,6 +40,7 @@ public:
         delete settingsAction;
         delete settingsDialog;
         delete userListView;
+        delete discoverer;
     }
 
     QAction *sendFileAction;
@@ -44,15 +48,14 @@ public:
     SettingsDialog *settingsDialog;
     UserList *userList;
     QQuickView *userListView;
+    Discoverer *discoverer;
 };
 
 
-Systray::Systray(UserList *userList, QObject *parent)
+Systray::Systray(QObject *parent)
     : QSystemTrayIcon(parent)
     , d(new Private)
 {
-    d->userList = userList;
-
     // set the user model here. Otherwise I end up with a null ptr. Then, load the qml view file
     d->userListView->rootContext()->setContextProperty("userListModel", d->userList);
     d->userListView->setSource(QUrl("qrc:///qml/main.qml"));
@@ -74,6 +77,11 @@ Systray::Systray(UserList *userList, QObject *parent)
             contextMenu()->show();
         }
     });
+
+    // setup first run info
+    if (Settings::isFirstRun()) {
+        // TODO show tutorial in browser?
+    }
 
     setIcon(QIcon(":/images/icons/tray_icon.png"));
     prepareMenu();

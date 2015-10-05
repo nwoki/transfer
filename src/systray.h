@@ -3,15 +3,19 @@
 
 #include <QtWidgets/QSystemTrayIcon>
 
-class UserList;
 
+/**
+ * Main obejct of the application. This can be considered the core of the program. It holds all
+ * the pieces together and gets them communicating one with another.
+ * Plus, it's the main GUI object
+ */
 
 class Systray : public QSystemTrayIcon
 {
     Q_OBJECT
 
 public:
-    Systray(UserList *userList, QObject *parent = 0);
+    Systray(QObject *parent = 0);
     ~Systray();
 
 private:

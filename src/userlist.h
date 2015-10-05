@@ -30,13 +30,6 @@ public:
      */
     Q_INVOKABLE QObject *user(const QString &uuid);
 
-    /**
-     * Shows a QFileDialog from which the user chooses a file to send to the selected
-     * user.
-     *
-     * @param uuid uuid of the user to send the file to
-     */
-    Q_INVOKABLE void sendFileToUser(const QString &uuid);
 
     // DEPRECATED
     /**
@@ -55,15 +48,6 @@ public Q_SLOTS:
      * @param uuid user's uuid
      */
     void addUser(const QString &userName, const QString &uuid);
-
-Q_SIGNALS:
-    /**
-     * signal that tells the application we want to send a file to a user
-     *
-     * @param destinationUserUuid uuid of the user we want to send the file to
-     * @param filePath path to the file we want to send
-     */
-    void sendFile(const QString &destinationUserUuid, const QString &filePath);
 
 private:
     void addUserToModel(User *user);

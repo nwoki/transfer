@@ -1,6 +1,7 @@
-#include "core.h"
+#include "systray.h"
 
 #include <QtWidgets/QApplication>
+
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +10,7 @@ int main(int argc, char *argv[])
     a.setApplicationName("Transfer");
     a.setOrganizationName("nwoki");
 
-    Core core;
+    Systray systray;
 
     return a.exec();
 }
