@@ -1,5 +1,6 @@
 set(transfer_SRCS
     dialogs/settingsdialog.cpp
+    connectioncenter.cpp
     core.cpp
     dbhandler.cpp
     discoverer.cpp
