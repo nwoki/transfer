@@ -14,9 +14,6 @@ public:
     Systray(UserList *userList, QObject *parent = 0);
     ~Systray();
 
-Q_SIGNALS:
-    void showSendFileView();
-
 private:
     void prepareMenu();
 

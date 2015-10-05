@@ -33,8 +33,9 @@ User::User(QObject *parent)
     connect(d->onlineTimer, &QTimer::timeout, this, &User::onlineTimerTimeout);
 }
 
-User::User(const QString &userName, const QString &uuid)
-    : d(new Private)
+User::User(const QString &userName, const QString &uuid, QObject *parent)
+    : QObject(parent)
+    , d(new Private)
 {
     d->username = userName;
     d->uuid = uuid;
@@ -61,8 +62,6 @@ bool User::isSelected() const
 
 void User::keepAlive()
 {
-    qDebug() << "[User::keepAlive] for: " << d->username;
-
     // restart the timer
     d->onlineTimer->stop();
 

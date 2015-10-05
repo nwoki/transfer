@@ -3,7 +3,10 @@
 #include "userlist.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QMetaProperty>
+
+#include <QtWidgets/QFileDialog>
 
 
 class UserList::Private
@@ -105,6 +108,22 @@ QObject* UserList::user(const QString &uuid)
     return d->users.value(uuid);
 }
 
+void UserList::sendFileToUser(const QString &uuid)
+{
+    if (uuid.isEmpty() || !d->users.contains(uuid)) {
+        return;
+    }
+
+    QString file = QFileDialog::getOpenFileName(nullptr, tr("Select file"), QDir::homePath());
+
+    if (file.isEmpty()) {
+        return;
+    } else {
+        Q_EMIT sendFile(uuid, file);
+    }
+}
+
+// DEPRECATED
 void UserList::toggleSelected(const QString &uuid)
 {
     qDebug() << "[UserList::toggleSelected] TOGGLING: " << uuid << " from: " << d->users.value(uuid)->isSelected();

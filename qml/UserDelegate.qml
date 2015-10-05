@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import QtQuick.Controls 1.4
 
 Item {
     id: root;
@@ -7,9 +8,11 @@ Item {
     property string clientUserName: "";
     property bool clientOnlineStatus;
 
+
     OnlineStatusAvatar {
         id: avatar;
 
+        online: root.clientOnlineStatus;
         width: 24;
         height: 24;
 
@@ -38,22 +41,27 @@ Item {
         }
     }
 
-    // Check this out. It was causing the listview to show doubles
-//     SelectionStatus {
-//         id: selectionStatus;
-//
-// //        selected: root.clientSelected;
-//         selected: false;
-//
-//         width: 25;
-//         height: 25;
-//
-//         anchors {
-//             verticalCenter: parent.verticalCenter;
-//             right: parent.right;
-//             rightMargin: 20;
-//         }
-//     }
+    Button {
+        id: sendFileButton;
+
+        height: 25;
+        width: 25;
+
+        anchors {
+            right: parent.right;
+            rightMargin: 10;
+            verticalCenter: parent.verticalCenter;
+        }
+
+        onClicked: {
+            if (!root.clientOnlineStatus) {
+                console.log("Client not online. Not showing menu");
+            } else {
+                console.log("Let's send this file");
+                userListModel.sendFileToUser(root.clientUuid);
+            }
+        }
+    }
 
     Rectangle {
         id: seperator;
@@ -67,22 +75,12 @@ Item {
         }
     }
 
-    MouseArea {
-        id: clickArea;
-        anchors.fill: parent;
-
-        // TODO use for selection
-//         onClicked: {
-//             avatar.online = true;
-//         }
-    }
-
     // Connect with the user object for online status
     Connections {
         target: userListModel.user(root.clientUuid);
 
         onOnlineStatusChanged: {
-            avatar.online = userListModel.user(root.clientUuid).online;
+            root.clientOnlineStatus = userListModel.user(root.clientUuid).online;
         }
     }
 }
