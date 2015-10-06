@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "settings.h"
 #include "user.h"
 
 #include <QtCore/QDebug>
@@ -35,10 +36,23 @@ void Parser::parse(const QByteArray &data)
     }
 
     QJsonObject actionObj = rootObj.value("action").toObject();
+    QString actionType = actionObj.value("type").toString();
 
-    if (actionObj.value("type").toString() == "advertise") {
+    QString destination = rootObj.value("destination").toString();
+
+    // check that I'm the desired recipient
+    if (destination != Settings::uuid() && !destination.isEmpty()) {
+        qDebug() << "NOT for me!";
+        return;
+    }
+
+    if (actionType == "advertise") {
         qDebug() << "user discovered: " << actionObj.value("user").toString() << rootObj.value("sender").toString();
         Q_EMIT userDiscovered(actionObj.value("user").toString(), rootObj.value("sender").toString());
+    } else if (actionType == "transfer") {
+        qDebug("GOT TRANSFER REQUEST");
+        qDebug() << "USER: " << actionObj.value("user").toString() << " wants to send you: " << actionObj.value("fileName").toString();
+        Q_EMIT fileTransferRequest(actionObj.value("user").toString(), actionObj.value("fileName").toString());
     }
 
     // TODO the other actions

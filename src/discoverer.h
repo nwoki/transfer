@@ -22,7 +22,8 @@ public:
 
     /**
      * Shows a QFileDialog from which the user chooses a file to send to the selected
-     * user.
+     * user. Once the file is selected, a "send" request is sent to that user. If the request returns "true"
+     * then the transfer begins. Otherwise the transfer is dropped.
      *
      * @param uuid uuid of the user to send the file to
      */
@@ -34,13 +35,18 @@ private Q_SLOTS:
 
 
 Q_SIGNALS:
+    void fileTransferRequestReceived(const QString &fromUuid, const QString &fileName);
+
+
+
+    // TODO not used
     /**
      * signal that tells the application we want to send a file to a user
      *
      * @param destinationUserUuid uuid of the user we want to send the file to
      * @param filePath path to the file we want to send
      */
-    void sendFile(const QString &destinationUserUuid, const QString &filePath);
+//     void sendFile(const QString &destinationUserUuid, const QString &filePath);
 
 private:
     class Private;

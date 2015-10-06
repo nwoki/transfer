@@ -32,6 +32,13 @@ public:
     QTimer *advertiseTimer;
     Parser *parser;
     QString uuid;
+
+    /**
+     * Holds a list of outgoing file requests towards the clients.
+     * The key of the hash is the uuid of the client whilst the value is
+     * a list of files awaiting confirmation to be sent.
+     */
+    QHash<QString, QList<QString>> outgoingFileRequests;
 };
 
 
@@ -46,6 +53,8 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
     d->advertiseTimer->start();
 
     connect(d->parser, &Parser::userDiscovered, d->userList, &UserList::addUser);
+    connect(d->parser, &Parser::fileTransferRequest, this, &Discoverer::fileTransferRequestReceived);
+
     connect(d->socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
     connect(d->socket, &QUdpSocket::readyRead, [this] () {
@@ -136,11 +145,40 @@ void Discoverer::sendFileToUser(const QString &uuid)
         return;
     }
 
+    // TODO multiple files
     QString file = QFileDialog::getOpenFileName(nullptr, tr("Select file"), QDir::homePath());
 
     if (file.isEmpty()) {
         return;
-    } else {
-        Q_EMIT sendFile(uuid, file);
     }
+
+    // send a "send file" request to the client on the LAN.
+    // A: "hey, I want to send you a file named xxx.
+    QVariantMap sendFileMap;
+    QVariantMap actionMap;
+
+    sendFileMap.insert("sender", Settings::uuid());
+    sendFileMap.insert("destination", uuid);
+    actionMap.insert("type", "transfer");
+    actionMap.insert("fileName", QFileInfo(file).fileName());
+//         actionMap.insert("mimetype", "");       // TODO?? Do I actually need this?
+    actionMap.insert("user", Settings::username());
+    sendFileMap.insert("action", actionMap);
+
+
+    QByteArray advertiseData = QJsonDocument::fromVariant(sendFileMap).toJson(QJsonDocument::Compact);
+    d->socket->writeDatagram(advertiseData, QHostAddress::Broadcast, ADVERTISE_PORT);
+
+    // and add to the list of outgoing files. This way we know what to send to whom when we receive an "OK, send me
+    // the file" confirmation
+    QList<QString> files;
+
+    // update files list
+    if (d->outgoingFileRequests.contains(uuid)) {
+        files = d->outgoingFileRequests.value(uuid);
+        files.append(file);
+    }
+
+    // insert files to send to user
+    d->outgoingFileRequests.insert(uuid, files);
 }

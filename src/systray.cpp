@@ -1,4 +1,5 @@
 #include "dialogs/settingsdialog.h"
+#include "connectioncenter.h"
 #include "discoverer.h"
 #include "settings.h"
 #include "systray.h"
@@ -15,6 +16,7 @@
 
 #include <QtQuick/QQuickView>
 
+
 class Systray::Private
 {
 public:
@@ -25,6 +27,7 @@ public:
         , userList(new UserList)
         , userListView(new QQuickView)
         , discoverer(new Discoverer(userList))
+        , connectionCenter(new ConnectionCenter)
     {
         QDesktopWidget *desktop = QApplication::desktop();
 
@@ -41,6 +44,7 @@ public:
         delete settingsDialog;
         delete userListView;
         delete discoverer;
+        delete connectionCenter;
     }
 
     QAction *sendFileAction;
@@ -49,6 +53,7 @@ public:
     UserList *userList;
     QQuickView *userListView;
     Discoverer *discoverer;
+    ConnectionCenter *connectionCenter;
 };
 
 
@@ -58,11 +63,17 @@ Systray::Systray(QObject *parent)
 {
     // set the user model here. Otherwise I end up with a null ptr. Then, load the qml view file
     d->userListView->rootContext()->setContextProperty("userListModel", d->userList);
+    d->userListView->rootContext()->setContextProperty("discoverer", d->discoverer);
     d->userListView->setSource(QUrl("qrc:///qml/main.qml"));
 
-    // TODO actions
-//     connect(d->sendFileAction, &QAction::triggered, d->userListView, &QQuickView::show);
-
+    // When we recieve a "send-file" request
+    connect(d->discoverer, &Discoverer::fileTransferRequestReceived, [this] (const QString &fromUuid, const QString &fileName) {
+        // show notification
+        showMessage(tr("Incoming file")
+                    , tr("<b>%1</b> wants to send you: <b>\"%2\"</b>    ").arg(fromUuid, fileName)
+                    , QSystemTrayIcon::Information
+                    , 5000);
+    });
 
     connect(d->settingsAction, &QAction::triggered, d->settingsDialog, &QDialog::show);
 

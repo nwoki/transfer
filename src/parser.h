@@ -14,6 +14,7 @@ public:
     void parse(const QByteArray &data);
 
 Q_SIGNALS:
+    void fileTransferRequest(const QString &fromUuid, const QString &fileName);
     void userDiscovered(const QString &userName, const QString &uuid);
 
 private:

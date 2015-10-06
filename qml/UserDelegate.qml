@@ -58,7 +58,7 @@ Item {
                 console.log("Client not online. Not showing menu");
             } else {
                 console.log("Let's send this file");
-                userListModel.sendFileToUser(root.clientUuid);
+                discoverer.sendFileToUser(root.clientUuid);
             }
         }
     }
