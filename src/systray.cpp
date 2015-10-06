@@ -44,11 +44,11 @@ public:
         delete sendFileAction;
         delete settingsAction;
         delete settingsDialog;
-        delete userListView;
         delete discoverer;
         delete connectionCenter;
-        delete userList;
         delete fileTransferList;
+        delete userList;
+        delete userListView;
     }
 
     QAction *sendFileAction;
