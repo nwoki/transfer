@@ -1,9 +1,10 @@
 set(transfer_SRCS
     dialogs/settingsdialog.cpp
     connectioncenter.cpp
-#     core.cpp
     dbhandler.cpp
     discoverer.cpp
+    filetransfer.cpp
+    filetransferlist.cpp
     main.cpp
     parser.cpp
     settings.cpp

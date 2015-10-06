@@ -1,6 +1,7 @@
 #include "dialogs/settingsdialog.h"
 #include "connectioncenter.h"
 #include "discoverer.h"
+#include "filetransferlist.h"
 #include "settings.h"
 #include "systray.h"
 #include "userlist.h"
@@ -25,6 +26,7 @@ public:
         , settingsAction(new QAction(QIcon(":/images/icons/configure.png"), tr("&Settings"), nullptr))
         , settingsDialog(new SettingsDialog)
         , userList(new UserList)
+        , fileTransferList(new FileTransferList)
         , userListView(new QQuickView)
         , discoverer(new Discoverer(userList))
         , connectionCenter(new ConnectionCenter)
@@ -45,12 +47,15 @@ public:
         delete userListView;
         delete discoverer;
         delete connectionCenter;
+        delete userList;
+        delete fileTransferList;
     }
 
     QAction *sendFileAction;
     QAction *settingsAction;
     SettingsDialog *settingsDialog;
     UserList *userList;
+    FileTransferList *fileTransferList;
     QQuickView *userListView;
     Discoverer *discoverer;
     ConnectionCenter *connectionCenter;
@@ -62,17 +67,20 @@ Systray::Systray(QObject *parent)
     , d(new Private)
 {
     // set the user model here. Otherwise I end up with a null ptr. Then, load the qml view file
+    d->userListView->rootContext()->setContextProperty("fileTransferListModel", d->fileTransferList);
     d->userListView->rootContext()->setContextProperty("userListModel", d->userList);
     d->userListView->rootContext()->setContextProperty("discoverer", d->discoverer);
     d->userListView->setSource(QUrl("qrc:///qml/main.qml"));
 
     // When we recieve a "send-file" request
-    connect(d->discoverer, &Discoverer::fileTransferRequestReceived, [this] (const QString &fromUuid, const QString &fileName) {
+    connect(d->discoverer, &Discoverer::fileTransferRequestReceived, [this] (const QString &fromUser, const QString &fileName, const QString &userUuid) {
         // show notification
         showMessage(tr("Incoming file")
-                    , tr("<b>%1</b> wants to send you: <b>\"%2\"</b>    ").arg(fromUuid, fileName)
+                    , tr("<b>%1</b> wants to send you: <b>\"%2\"</b>    ").arg(fromUser, fileName)
                     , QSystemTrayIcon::Information
                     , 5000);
+
+        d->fileTransferList->addFileTransfer(fromUser, fileName, userUuid);
     });
 
     connect(d->settingsAction, &QAction::triggered, d->settingsDialog, &QDialog::show);

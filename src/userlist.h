@@ -3,7 +3,6 @@
 
 #include <QtCore/QAbstractListModel>
 #include <QtCore/QList>
-#include <QtCore/QObject>
 #include <QtCore/QString>
 
 

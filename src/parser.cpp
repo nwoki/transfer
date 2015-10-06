@@ -50,9 +50,10 @@ void Parser::parse(const QByteArray &data)
         qDebug() << "user discovered: " << actionObj.value("user").toString() << rootObj.value("sender").toString();
         Q_EMIT userDiscovered(actionObj.value("user").toString(), rootObj.value("sender").toString());
     } else if (actionType == "transfer") {
-        qDebug("GOT TRANSFER REQUEST");
         qDebug() << "USER: " << actionObj.value("user").toString() << " wants to send you: " << actionObj.value("fileName").toString();
-        Q_EMIT fileTransferRequest(actionObj.value("user").toString(), actionObj.value("fileName").toString());
+        Q_EMIT fileTransferRequest(actionObj.value("user").toString()
+                                , actionObj.value("fileName").toString()
+                                , rootObj.value("destination").toString());
     }
 
     // TODO the other actions

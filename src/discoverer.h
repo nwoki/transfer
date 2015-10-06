@@ -35,9 +35,7 @@ private Q_SLOTS:
 
 
 Q_SIGNALS:
-    void fileTransferRequestReceived(const QString &fromUuid, const QString &fileName);
-
-
+    void fileTransferRequestReceived(const QString &fromUser, const QString &fileName, const QString &userUuid);
 
     // TODO not used
     /**

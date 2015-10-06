@@ -1,9 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
-        <file>qml/UserDelegate.qml</file>
-        <file>qml/SelectionStatus.qml</file>
-        <file>qml/Avatar.qml</file>
-        <file>qml/OnlineStatusAvatar.qml</file>
+        <file>qml/UserList/UserDelegate.qml</file>
+        <file>qml/UserList/OnlineStatusAvatar.qml</file>
+        <file>qml/TransferList/TransferDelegate.qml</file>
     </qresource>
 </RCC>

@@ -1,33 +1,70 @@
 import QtQuick 2.4
+import QtQuick.Controls 1.4
 
-Item {
-    id: root;
+import "TransferList"
+import "UserList"
+
+TabView {
+    id: tabRoot
 
     width: 300;
     height: 400;
 
+    Tab {
+        title: qsTr("Users");
 
-    ListView {
-        id: userList;
+        Item {
+            id: userTab;
 
-        model: userListModel;
+            ListView {
+                id: userList;
 
-        anchors {
-            fill: parent;
-        }
+                model: userListModel;
 
-        height: parent.height;
-        width: parent.width/2;
+                anchors {
+                    fill: parent;
+                }
+
+                height: parent.height;
+                width: parent.width/2;
 
 
-        delegate:
-            UserDelegate {
-                clientUuid: uuid;
-                clientUserName: userName;
-                clientOnlineStatus: online;
+                delegate:
+                    UserDelegate {
+                        clientUuid: uuid;
+                        clientUserName: userName;
+                        clientOnlineStatus: online;
 
-                height: 30;
-                width: parent.width;
+                        height: 30;
+                        width: parent.width;
+                    }
             }
+        }
+    }
+
+    Tab {
+        title: qsTr("Transfers");
+
+        Item {
+            id: transferTab;
+
+            ListView {
+                id: transferList;
+                model: fileTransferListModel;
+
+                anchors.fill: parent;
+
+                delegate:
+                    TransferDelegate {
+                        transferFileName: fileName;
+                        transferUserName: userName;
+                        transferUserUuid: userUuid;
+
+                        height: 30;
+                        width: parent.width;
+                    }
+
+            }
+        }
     }
 }
