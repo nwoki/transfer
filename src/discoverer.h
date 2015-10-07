@@ -21,6 +21,13 @@ public:
     ~Discoverer();
 
     /**
+     * Accepts a pending file transfer request
+     * @param uuid the uuid of the client that wants to send us the file
+     * @param fileName the name of the file to give the "ok" for
+     */
+    Q_INVOKABLE void acceptFileTransfer(const QString &uuid, const QString &fileName);
+
+    /**
      * Shows a QFileDialog from which the user chooses a file to send to the selected
      * user. Once the file is selected, a "send" request is sent to that user. If the request returns "true"
      * then the transfer begins. Otherwise the transfer is dropped.
@@ -32,6 +39,7 @@ public:
 private Q_SLOTS:
     void advertise();
     void onError(QAbstractSocket::SocketError socketError);
+    void onFileTransferAccepted(const QString &fromUuid, const QString &fileName, const QString &ip, int port);
 
 
 Q_SIGNALS:

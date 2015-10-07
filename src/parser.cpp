@@ -25,7 +25,7 @@ Parser::~Parser()
     delete d;
 }
 
-void Parser::parse(const QByteArray &data)
+void Parser::parse(const QByteArray &data, const QString &senderIp)
 {
     QJsonParseError jsonError;
     QJsonObject rootObj = QJsonDocument::fromJson(data, &jsonError).object();
@@ -54,6 +54,12 @@ void Parser::parse(const QByteArray &data)
         Q_EMIT fileTransferRequest(actionObj.value("user").toString()
                                 , actionObj.value("fileName").toString()
                                 , rootObj.value("destination").toString());
+    } else if (actionType == "transfer-accept") {
+        qDebug() << "TRANSFER ACCEPT - START SENDING FILE TO CLIENT";
+        Q_EMIT fileTransferAccepted(rootObj.value("sender").toString()
+                                , actionObj.value("fileName").toString()
+                                , senderIp
+                                , actionObj.value("port").toInt());
     }
 
     // TODO the other actions

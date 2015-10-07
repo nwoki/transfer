@@ -11,9 +11,10 @@ public:
     Parser(QObject *parent = 0);
     ~Parser();
 
-    void parse(const QByteArray &data);
+    void parse(const QByteArray &data, const QString &senderIp);
 
 Q_SIGNALS:
+    void fileTransferAccepted(const QString &fromUuid, const QString &fileName, const QString &ip, int port);
     void fileTransferRequest(const QString &fromUser, const QString &fileName, const QString &userUuid);
     void userDiscovered(const QString &userName, const QString &uuid);
 

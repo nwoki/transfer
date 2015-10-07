@@ -43,3 +43,13 @@ ConnectionCenter::~ConnectionCenter()
     delete d;
 }
 
+void ConnectionCenter::sendFileToClient(const QString &clientUuid, const QString &fileName, const QString &ip, int port)
+{
+    qDebug() << "[ConnectionCenter::sendFileToClient] want to send: " << fileName << " to " << clientUuid << " on " << ip << ":" << port;
+}
+
+quint16 ConnectionCenter::serverPort() const
+{
+    return d->server->serverPort();
+}
+

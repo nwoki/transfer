@@ -17,7 +17,8 @@ Item {
         width: 20;
 
         onClicked: {
-            // TODO start transfer
+            // accept file transfer
+            discoverer.acceptFileTransfer(root.transferUserUuid, root.transferFileName);
         }
 
         anchors {

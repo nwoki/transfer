@@ -63,6 +63,7 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
     d->advertiseTimer->start();
 
     connect(d->parser, &Parser::userDiscovered, d->userList, &UserList::addUser);
+    connect(d->parser, &Parser::fileTransferAccepted, this, &Discoverer::onFileTransferAccepted);
     connect(d->parser, &Parser::fileTransferRequest, this, &Discoverer::fileTransferRequestReceived);
 
     connect(d->socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
@@ -70,14 +71,14 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
     connect(d->socket, &QUdpSocket::readyRead, [this] () {
         while (d->socket->hasPendingDatagrams()) {
             QByteArray datagram;
-            QHostAddress sender;
+            QHostAddress senderIp;
             quint16 senderPort;
 
             datagram.resize(d->socket->pendingDatagramSize());
 
             d->socket->readDatagram(datagram.data()
                                     , datagram.size()
-                                    , &sender
+                                    , &senderIp
                                     , &senderPort);
 
             // detect host ip(s). We don't want to be parsing our own data
@@ -89,11 +90,11 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
             }
 
             // TODO remove after parse test
-            d->parser->parse(datagram);
+            d->parser->parse(datagram, senderIp.toString());
             // end
 
-            if (!hostIps.contains(sender.toString())) {
-                d->parser->parse(datagram);
+            if (!hostIps.contains(senderIp.toString())) {
+                d->parser->parse(datagram, senderIp.toString());
             }
         }
     });
@@ -101,10 +102,29 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
 
 Discoverer::~Discoverer()
 {
-    delete d->socket;
-    delete d->advertiseTimer;
-    delete d->parser;
     delete d;
+}
+
+void Discoverer::acceptFileTransfer(const QString &uuid, const QString &fileName)
+{
+    if (uuid.isEmpty() || fileName.isEmpty()) {
+        return;
+    }
+
+    // send a "accept file transfer" request to the client on the LAN.
+    // B: "hey, I accept that you send me the file xxx"
+    QVariantMap sendFileMap;
+    QVariantMap actionMap;
+
+    sendFileMap.insert("sender", Settings::uuid());
+    sendFileMap.insert("destination", uuid);
+    actionMap.insert("type", "transfer-accept");
+    actionMap.insert("fileName", fileName);
+    actionMap.insert("port", d->connectionCenter->serverPort());
+    sendFileMap.insert("action", actionMap);
+
+    QByteArray advertiseData = QJsonDocument::fromVariant(sendFileMap).toJson(QJsonDocument::Compact);
+    d->socket->writeDatagram(advertiseData, QHostAddress::Broadcast, ADVERTISE_PORT);
 }
 
 void Discoverer::advertise()
@@ -149,6 +169,27 @@ void Discoverer::onError(QAbstractSocket::SocketError socketError)
     qDebug() << d->socket->errorString();
 }
 
+void Discoverer::onFileTransferAccepted(const QString &fromUuid, const QString &fileName, const QString &ip, int port)
+{
+    // get the file path to send to the client
+    QString filePath;
+
+    for (const QString &file : d->outgoingFileRequests.value(fromUuid)) {
+        if (QFileInfo(file).fileName() == fileName) {
+            filePath = file;
+
+            // update the outgoing list
+            QList<QString> taken = d->outgoingFileRequests.take(fromUuid);
+            taken.removeOne(file);
+            d->outgoingFileRequests.insert(fromUuid, taken);
+
+            break;
+        }
+    }
+
+    d->connectionCenter->sendFileToClient(fromUuid, filePath, ip, port);
+}
+
 void Discoverer::sendFileToUser(const QString &uuid)
 {
     if (uuid.isEmpty() || d->userList->user(uuid) == nullptr) {
@@ -184,7 +225,7 @@ void Discoverer::sendFileToUser(const QString &uuid)
     QList<QString> files;
 
     // update files list
-    if (d->outgoingFileRequests.contains(uuid)) {
+    if (!d->outgoingFileRequests.contains(uuid)) {
         files = d->outgoingFileRequests.value(uuid);
         files.append(file);
     }
