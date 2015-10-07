@@ -1,3 +1,4 @@
+#include "connectioncenter.h"
 #include "discoverer.h"
 #include "parser.h"
 #include "settings.h"
@@ -25,13 +26,22 @@ public:
         , advertiseTimer(new QTimer)
         , parser(new Parser)
         , uuid(Settings::uuid())
+        , connectionCenter(new ConnectionCenter)
     {};
+
+    ~Private() {
+        delete socket;
+        delete advertiseTimer;
+        delete parser;
+        delete connectionCenter;
+    }
 
     UserList *userList;
     QUdpSocket *socket;
     QTimer *advertiseTimer;
     Parser *parser;
     QString uuid;
+    ConnectionCenter *connectionCenter;
 
     /**
      * Holds a list of outgoing file requests towards the clients.

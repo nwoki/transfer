@@ -1,5 +1,4 @@
 #include "dialogs/settingsdialog.h"
-#include "connectioncenter.h"
 #include "discoverer.h"
 #include "filetransferlist.h"
 #include "settings.h"
@@ -29,7 +28,6 @@ public:
         , fileTransferList(new FileTransferList)
         , userListView(new QQuickView)
         , discoverer(new Discoverer(userList))
-        , connectionCenter(new ConnectionCenter)
     {
         QDesktopWidget *desktop = QApplication::desktop();
 
@@ -45,7 +43,6 @@ public:
         delete settingsAction;
         delete settingsDialog;
         delete discoverer;
-        delete connectionCenter;
         delete fileTransferList;
         delete userList;
         delete userListView;
@@ -58,7 +55,6 @@ public:
     FileTransferList *fileTransferList;
     QQuickView *userListView;
     Discoverer *discoverer;
-    ConnectionCenter *connectionCenter;
 };
 
 
