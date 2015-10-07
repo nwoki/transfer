@@ -3,6 +3,7 @@
         <file>qml/main.qml</file>
         <file>qml/UserList/UserDelegate.qml</file>
         <file>qml/UserList/OnlineStatusAvatar.qml</file>
+        <file>qml/TransferList/AcceptDeclineButton.qml</file>
         <file>qml/TransferList/TransferDelegate.qml</file>
     </qresource>
 </RCC>
