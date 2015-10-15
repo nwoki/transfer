@@ -56,12 +56,25 @@ void UserList::addUserToModel(User *user)
 
 void UserList::addUser(const QString &userName, const QString &uuid)
 {
+    qDebug() << "CONTAIN: " << d->userUuids.contains(uuid);
+
+    qDebug("AAA");
+
     if (!d->userUuids.contains(uuid)) {
-        User *user = new User(userName, uuid);
-        addUserToModel(user);
+        qDebug("BBB");
+//         User *user = new User(userName, uuid);
+//         addUserToModel(user);
+        qDebug("CCC");
     } else {
+//         qDebug() << "DOES THE USER ALREADY EXIST? - " << d->users.value(uuid, nullptr);
+
         // treat it as a ping
-        d->users.value(uuid)->keepAlive();
+        if (d->users.value(uuid, nullptr) != nullptr) {
+            qDebug() << "YES! PING IT!";
+            d->users.value(uuid)->keepAlive();
+        } else {
+            qDebug("DON'T PING SHIT");
+        }
     }
 }
 

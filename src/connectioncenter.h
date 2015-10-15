@@ -23,7 +23,18 @@ public:
     quint16 serverPort() const;
 
 public Q_SLOTS:
-    void sendFileToClient(const QString &clientUuid, const QString &fileName, const QString &ip, int port);
+    /**
+     * Sends the specified file to the client
+     * @param fileName file to send
+     * @param ip client ip address to connect to
+     * @param port client port to connect to
+     */
+    void sendFileToClient(const QString &fileName, const QString &ip, int port);
+
+private Q_SLOTS:
+    /** handles new connection from clients */
+    void onNewConnection();
+    void onTransferReceiveJobFinished();
 
 private:
     class Private;

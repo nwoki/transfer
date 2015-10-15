@@ -9,6 +9,8 @@ set(transfer_SRCS
     parser.cpp
     settings.cpp
     systray.cpp
+    transferreceivejob.cpp
+    transfersendjob.cpp
     user.cpp
     userlist.cpp
 )

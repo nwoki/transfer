@@ -30,6 +30,7 @@ public:
     {};
 
     ~Private() {
+        socket->close();
         delete socket;
         delete advertiseTimer;
         delete parser;
@@ -157,7 +158,7 @@ void Discoverer::onFileTransferAccepted(const QString &fromUuid, const QString &
         }
     }
 
-    d->connectionCenter->sendFileToClient(fromUuid, filePath, ip, port);
+    d->connectionCenter->sendFileToClient(filePath, ip, port);
 }
 
 void Discoverer::onReadyRead()

@@ -6,6 +6,7 @@
 class Settings
 {
 public:
+    static QString downloadDir();
     /**
      * checks settings file to see if the application is being launched
      * for the first time. If so, prompt the user with:

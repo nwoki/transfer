@@ -6,6 +6,12 @@
 
 #include <QtNetwork/QHostInfo>
 
+QString Settings::downloadDir()
+{
+    QSettings settings;
+    return settings.value("user/download_dir").toString();
+}
+
 bool Settings::isFirstRun()
 {
     bool firstRun = false;

@@ -6,6 +6,7 @@
 
 #include <QtSql/QSqlDatabase>
 
+
 class User;
 
 /**
