@@ -148,7 +148,7 @@ bool DbHandler::createDatabase()
 QList<QPair<QString, QString>> DbHandler::userList()
 {
     QList<QPair<QString, QString>> userList;
-    QSqlQuery extractionQuery = exec(QString("select username, uuid from users"));
+    QSqlQuery extractionQuery = exec(QString("select uuid, username from users"));
 
     if (extractionQuery.lastError().type() == QSqlError::NoError) {
 

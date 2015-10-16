@@ -23,8 +23,7 @@ public:
 };
 
 
-// TODO uuid, username
-User::User(const QString &userName, const QString &uuid, QObject *parent)
+User::User(const QString &uuid, const QString &userName, QObject *parent)
     : QObject(parent)
     , d(new Private)
 {

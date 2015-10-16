@@ -23,10 +23,8 @@ public:
     void addUser(User *user);
 
     /** retrieves the list of saved users on the database
-     * first - username
-     * second - uuid
-     *
-     * TODO switch uuid to first place
+     * first - uuid
+     * second - username
      */
     QList<QPair<QString, QString>> userList();
 

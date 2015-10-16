@@ -22,7 +22,7 @@ public:
         uuidRole
     };
 
-    User(const QString &userName, const QString &uuid, QObject *parent = 0);
+    User(const QString &uuid, const QString &userName, QObject *parent = 0);
     ~User();
 
     QVariant data(int role) const;
