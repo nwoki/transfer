@@ -77,6 +77,11 @@ bool User::online() const
 void User::onlineTimerTimeout()
 {
     d->online = false;
+
+    // when the user goes offline, we don't need this timer anymore. It'll be the
+    // user to ping us when he comes back online
+    d->onlineTimer->stop();
+
     Q_EMIT onlineStatusChanged();
 }
 
