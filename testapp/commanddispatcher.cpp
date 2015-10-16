@@ -51,8 +51,6 @@ CommandDispatcher::~CommandDispatcher()
 
 void CommandDispatcher::advertise()
 {
-    qDebug() << "DISPATCHIng";
-
     // send advertisement
     QVariantMap advertiseMap;
     QVariantMap actionMap;

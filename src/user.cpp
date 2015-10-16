@@ -11,42 +11,34 @@ public:
     Private()
         : selected(false)
         , online(false)
-        , onlineTimer(new QTimer)
+        , onlineTimer(nullptr)
     {
-        onlineTimer->setInterval(10000);
     }
 
     bool selected;
     bool online;
     QString username;
     QString uuid;
-
     QTimer *onlineTimer;
 };
 
 
-User::User(QObject *parent)
-    : QObject(parent)
-    , d(new Private)
-{
-    d->onlineTimer->start();
-    connect(d->onlineTimer, &QTimer::timeout, this, &User::onlineTimerTimeout);
-}
-
+// TODO uuid, username
 User::User(const QString &userName, const QString &uuid, QObject *parent)
     : QObject(parent)
     , d(new Private)
 {
     d->username = userName;
     d->uuid = uuid;
-    d->onlineTimer->start();
+    d->onlineTimer = new QTimer(this);
+    d->onlineTimer->setInterval(10000);
 
     connect(d->onlineTimer, &QTimer::timeout, this, &User::onlineTimerTimeout);
+    d->onlineTimer->start();
 }
 
 User::~User()
 {
-    delete d->onlineTimer;
     delete d;
 }
 
@@ -62,8 +54,13 @@ bool User::isSelected() const
 
 void User::keepAlive()
 {
+    qDebug("[User::keepAlive]");
+
+
     // restart the timer
-    d->onlineTimer->stop();
+    if (d->onlineTimer->isActive()) {
+        d->onlineTimer->stop();
+    }
 
     if (!d->online) {
         d->online = true;

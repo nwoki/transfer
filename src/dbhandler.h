@@ -2,6 +2,7 @@
 #define DBHANDLER_H
 
 #include <QtCore/QList>
+#include <QtCore/QPair>
 
 #include <QtSql/QSqlDatabase>
 
@@ -21,8 +22,13 @@ public:
     /** adds a user to the database */
     void addUser(User *user);
 
-    /** retrieves the list of saved users on the database */
-    QList<User *> userList();
+    /** retrieves the list of saved users on the database
+     * first - username
+     * second - uuid
+     *
+     * TODO switch uuid to first place
+     */
+    QList<QPair<QString, QString>> userList();
 
 private:
     bool createDatabase();

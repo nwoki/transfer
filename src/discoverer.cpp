@@ -67,37 +67,7 @@ Discoverer::Discoverer(UserList *userlist, QObject *parent)
     connect(d->parser, &Parser::fileTransferRequest, this, &Discoverer::fileTransferRequestReceived);
 
     connect(d->socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
-
-    connect(d->socket, &QUdpSocket::readyRead, [this] () {
-        while (d->socket->hasPendingDatagrams()) {
-            QByteArray datagram;
-            QHostAddress senderIp;
-            quint16 senderPort;
-
-            datagram.resize(d->socket->pendingDatagramSize());
-
-            d->socket->readDatagram(datagram.data()
-                                    , datagram.size()
-                                    , &senderIp
-                                    , &senderPort);
-
-            // detect host ip(s). We don't want to be parsing our own data
-            QStringList hostIps;
-            foreach (const QHostAddress &address, QNetworkInterface::allAddresses()) {
-                if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
-                    hostIps.append(address.toString());
-                }
-            }
-
-            // TODO remove after parse test
-            d->parser->parse(datagram, senderIp.toString());
-            // end
-
-            if (!hostIps.contains(senderIp.toString())) {
-                d->parser->parse(datagram, senderIp.toString());
-            }
-        }
-    });
+    connect(d->socket, &QUdpSocket::readyRead, this, &Discoverer::onReadyRead);
 }
 
 Discoverer::~Discoverer()
@@ -188,6 +158,38 @@ void Discoverer::onFileTransferAccepted(const QString &fromUuid, const QString &
     }
 
     d->connectionCenter->sendFileToClient(fromUuid, filePath, ip, port);
+}
+
+void Discoverer::onReadyRead()
+{
+    while (d->socket->hasPendingDatagrams()) {
+        QByteArray datagram;
+        QHostAddress senderIp;
+        quint16 senderPort;
+
+        datagram.resize(d->socket->pendingDatagramSize());
+
+        d->socket->readDatagram(datagram.data()
+                                , datagram.size()
+                                , &senderIp
+                                , &senderPort);
+
+        // detect host ip(s). We don't want to be parsing our own data
+        QStringList hostIps;
+        foreach (const QHostAddress &address, QNetworkInterface::allAddresses()) {
+            if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
+                hostIps.append(address.toString());
+            }
+        }
+
+        // TODO remove after parse test
+        d->parser->parse(datagram, senderIp.toString());
+        // end
+
+        if (!hostIps.contains(senderIp.toString())) {
+            d->parser->parse(datagram, senderIp.toString());
+        }
+    }
 }
 
 void Discoverer::sendFileToUser(const QString &uuid)

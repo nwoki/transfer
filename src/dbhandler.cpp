@@ -49,7 +49,7 @@ DbHandler::DbHandler()
         setDatabaseName(d->dbLocPath + QDir::separator() + d->dbFileName);
 
         d->dbStatus = open();
-        qDebug() << "[DbHandler::DbHandler] opening database" << d->dbStatus;
+        qDebug() << "[DbHandler::DbHandler] opening database @ " << databaseName() << " : " << d->dbStatus;
 
         if (!d->dbStatus) {
             qDebug() << "[DbHandler::DbHandler] can't open db: " << lastError().text();
@@ -145,18 +145,16 @@ bool DbHandler::createDatabase()
     return success;
 }
 
-QList<User*> DbHandler::userList()
+QList<QPair<QString, QString>> DbHandler::userList()
 {
-    QList<User*> userList;
+    QList<QPair<QString, QString>> userList;
     QSqlQuery extractionQuery = exec(QString("select username, uuid from users"));
 
     if (extractionQuery.lastError().type() == QSqlError::NoError) {
 
         while (extractionQuery.next()) {
-            User *user = new User(extractionQuery.value(0).toString()
-                                , extractionQuery.value(1).toString());
-
-            userList.append(user);
+            userList.append(QPair<QString, QString>(extractionQuery.value(0).toString()
+                                                    , extractionQuery.value(1).toString()));
         }
 
     } else {

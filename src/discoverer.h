@@ -40,6 +40,7 @@ private Q_SLOTS:
     void advertise();
     void onError(QAbstractSocket::SocketError socketError);
     void onFileTransferAccepted(const QString &fromUuid, const QString &fileName, const QString &ip, int port);
+    void onReadyRead();
 
 
 Q_SIGNALS:

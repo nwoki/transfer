@@ -22,7 +22,6 @@ public:
         uuidRole
     };
 
-    User(QObject *parent = 0);
     User(const QString &userName, const QString &uuid, QObject *parent = 0);
     ~User();
 

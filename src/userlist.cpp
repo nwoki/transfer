@@ -25,9 +25,11 @@ UserList::UserList(QObject *parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
+    qDebug("[UserList::UserList]");
+
     // load userlist from database
-    for (User *user : d->dbHandler->userList()) {
-        addUserToModel(user);
+    for (const QPair<QString, QString> &user : d->dbHandler->userList()) {
+        addUserToModel(new User(user.first, user.second));
     }
 }
 
