@@ -75,6 +75,7 @@ void DbHandler::addUser(User *user)
     qDebug("[DbHandler::addUser]");
 
     if (!d->dbStatus) {
+        qDebug() << "[DbHandler::addUser] db status FALSE!!";
         return;
     }
 
@@ -99,6 +100,8 @@ void DbHandler::addUser(User *user)
         if (addUserQuery.lastError().type() != QSqlError::NoError) {
             qDebug() << "[DbHandler::addUser] ERROR: " << addUserQuery.lastError().text();
         }
+    } else {
+        qDebug() << "[DbHandler::addUser] user already exists in db";
     }
 }
 
